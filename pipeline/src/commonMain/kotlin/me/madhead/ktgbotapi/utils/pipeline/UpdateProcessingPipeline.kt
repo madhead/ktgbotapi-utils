@@ -2,9 +2,14 @@ package me.madhead.ktgbotapi.utils.pipeline
 
 import dev.inmo.kslog.common.KSLog
 import dev.inmo.kslog.common.debug
+import dev.inmo.kslog.common.error
 import dev.inmo.kslog.common.logger
 import dev.inmo.kslog.common.warning
 import dev.inmo.tgbotapi.types.update.abstracts.Update
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.supervisorScope
 
 /**
  * A pipeline of [UpdateProcessor]s.
@@ -16,24 +21,34 @@ class UpdateProcessingPipeline(
     private val processors: List<UpdateProcessor>,
 ) {
     companion object {
-        private val logger = KSLog.logger
+        private val log = KSLog.logger
     }
 
     /**
      * Process the [update][Update].
      */
-    suspend fun process(update: Update) {
-        logger.debug { "Processing update: $update" }
+    suspend fun process(update: Update) = supervisorScope {
+        log.debug { "Processing update: $update" }
 
-        processors
-            .mapNotNull { it.process(update) }
-            .also { reactions ->
-                logger.debug { "Reactions (${reactions.size}): ${reactions.map { it::class }}" }
-                if (reactions.size != 1) {
-                    logger.warning { "No suitable processor found or found more than one" }
+        val reactions = processors
+            .map {
+                async(Dispatchers.Default) {
+                    try {
+                        it.process(update)
+                    } catch (e: Exception) {
+                        logger.error(e) { "Error processing update: $update" }
+
+                        null
+                    }
                 }
             }
-            .singleOrNull()
-            ?.invoke()
+            .awaitAll()
+            .filterNotNull()
+
+        when (reactions.size) {
+            0 -> logger.warning { "No suitable processor found" }
+            1 -> reactions.single().invoke()
+            else -> throw IllegalStateException("Found more than one suitable processor")
+        }
     }
 }
