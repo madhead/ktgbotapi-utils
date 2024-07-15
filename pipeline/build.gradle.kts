@@ -1,5 +1,6 @@
 plugins {
     id("kotlin-convention")
+    id("dokka-convention")
 }
 
 dependencies {
