@@ -12,7 +12,6 @@ junit = "5.10.3"
 
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
-
 ktgbotapi-core = { module = "dev.inmo:tgbotapi.core", version.ref = "ktgbotapi" }
 kslog = { module = "dev.inmo:kslog", version.ref = "kslog" }
 

@@ -1,10 +1,11 @@
 plugins {
     id("kotlin-convention")
     id("dokka-convention")
+    id("publish-convention")
 }
 
 dependencies {
-    commonMainCompileOnly(libs.ktgbotapi.core)
+    commonMainApi(libs.ktgbotapi.core)
     commonMainImplementation(libs.kslog)
 
     jvmTestImplementation(libs.ktgbotapi.core)
