@@ -59,6 +59,7 @@ publishing {
 
         repositories {
             if (env("GITHUB_ACTIONS") != null) {
+                // TODO: add sha / run ID to the version
                 maven {
                     name = "GitHubPackages"
                     url = uri("https://maven.pkg.github.com/${env("GITHUB_REPOSITORY")}")
@@ -72,14 +73,13 @@ publishing {
     }
 }
 
-// TODO: Use GPG key from secrets
-//if (env("CI") != null) {
-//    signing {
-//        useGpgCmd()
-//        sign(publishing.publications)
-//    }
-//
-//    tasks.withType<AbstractPublishToMaven> {
-//        dependsOn(tasks.withType<Sign>())
-//    }
-//}
+if (env("CI") != null) {
+    signing {
+        useInMemoryPgpKeys(env("SIGNING_KEY"), env("SIGNING_PASSWORD"))
+        sign(publishing.publications)
+    }
+
+    tasks.withType<AbstractPublishToMaven> {
+        dependsOn(tasks.withType<Sign>())
+    }
+}
