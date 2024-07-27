@@ -4,6 +4,8 @@ import org.gradle.api.publish.internal.component.ConfigurationVariantMapping
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinSoftwareComponentWithCoordinatesAndPublication
 import java.lang.System.getenv as env
+import me.madhead.ktgbotapi.utils.gradle.build.CI
+import me.madhead.ktgbotapi.utils.gradle.build.GITHUB_ACTIONS
 
 plugins {
     id("dokka-convention")
@@ -58,8 +60,7 @@ publishing {
         }
 
         repositories {
-            if (env("GITHUB_ACTIONS") != null) {
-                // TODO: add sha / run ID to the version
+            if (GITHUB_ACTIONS) {
                 maven {
                     name = "GitHubPackages"
                     url = uri("https://maven.pkg.github.com/${env("GITHUB_REPOSITORY")}")
@@ -73,7 +74,7 @@ publishing {
     }
 }
 
-if (env("CI") != null) {
+if (CI) {
     signing {
         useInMemoryPgpKeys(env("SIGNING_KEY"), env("SIGNING_PASSWORD"))
         sign(publishing.publications)

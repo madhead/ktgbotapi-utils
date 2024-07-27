@@ -1,0 +1,11 @@
+= Releases and versions
+
+. The project sticks to https://semver.org[Semantic Versioning].
+
+. No ``SNAPSHOT``s.
+
+. The project uses https://github.com/allegro/axion-release-plugin[`axion-release-plugin`].
+
+. Every release is signed.
+
+. Every PR, no matter what's the target branch, is built and published to GitHub Packages. The version in this case is taken from the nearest preceding tag concatenated with the branch name, Git SHA and GitHub Actions run ID: `1.0.0-branch-name+cafebabe.42`.
