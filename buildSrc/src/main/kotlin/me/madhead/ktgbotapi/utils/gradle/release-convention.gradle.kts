@@ -17,7 +17,7 @@ version = when {
         val sha = env("GITHUB_SHA")
         val runId = env("GITHUB_RUN_ID")
 
-        "${scmVersion.version}+$sha.$runId"
+        "${scmVersion.version}+${sha.take(7)}.$runId"
     }
 
     else -> scmVersion.version
