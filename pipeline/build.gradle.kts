@@ -1,7 +1,7 @@
 plugins {
     id("kotlin-convention")
     id("dokka-convention")
-    id("release-convention")
+//    id("release-convention")
     id("publish-convention")
 }
 
