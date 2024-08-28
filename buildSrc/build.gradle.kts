@@ -9,4 +9,6 @@ repositories {
 dependencies {
     implementation(libs.kotlin.gradle.plugin)
     implementation(libs.dokka.gradle.plugin)
+    implementation(libs.axion.release.plugin)
+    implementation(libs.gradle.maven.publish.plugin)
 }
